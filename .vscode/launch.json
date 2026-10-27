@@ -1,0 +1,44 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "EDFA: run (all scenarios)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "edfa_sim",
+      "args": ["run"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "EDFA: run (single case)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "edfa_sim",
+      "args": ["run", "--case", "${input:caseId}"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "EDFA: validate",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "edfa_sim",
+      "args": ["validate"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "console": "integratedTerminal"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "caseId",
+      "type": "promptString",
+      "description": "scenario id (see scenarios in configs/three_stage_demo.json)"
+    }
+  ]
+}

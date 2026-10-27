@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "config_name": "three_stage_reference_demo",
+  "baseline_case": "normal",
+  "seed": 20261023,
+  "case_ids": [
+    "normal"
+  ],
+  "parameter_source": "engineering_assumption",
+  "vendor_confirmed": false
+}

@@ -1,0 +1,9 @@
+name: edfa-agent
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - setuptools>=68
+  - numpy>=1.24,<3
+  - pytest>=8,<10

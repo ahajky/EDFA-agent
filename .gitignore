@@ -1,0 +1,10 @@
+
+# coding-agent-workflow：个人工作记忆，不进代码提交
+.agent/
+AGENTS.md
+.obsidian/
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/

@@ -1,0 +1,2 @@
+case_id,root_causes,output_signal_total_dbm,output_osa_total_dbm,total_gain_db,flatness_db,effective_nf_db,stage_gains_db,tap_observed_dbm,output_delta_vs_baseline_db,flatness_delta_vs_baseline_db,controller_iterations,diagnostic_evidence
+normal,,20.5901,20.5921,28.5695,2.2874,5.7032,stage1=12.000;stage2=12.000;stage3=8.000,in_tap=-24.946;mid_tap1=-13.777;mid_tap2=-3.658;out_tap=4.159,0.0000,0.0000,1,
