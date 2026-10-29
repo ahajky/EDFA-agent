@@ -1,0 +1,3 @@
+[console_scripts]
+edfa-greybox = edfa_greybox.cli:main
+edfa-whitebox = edfa_whitebox.__main__:main

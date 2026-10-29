@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "EDFA: run (all scenarios)",
+      "name": "Greybox: run (all scenarios)",
       "type": "debugpy",
       "request": "launch",
-      "module": "edfa_sim",
+      "module": "edfa_greybox",
       "args": ["run"],
       "cwd": "${workspaceFolder}",
       "env": { "PYTHONPATH": "${workspaceFolder}/src" },
@@ -13,10 +13,10 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "EDFA: run (single case)",
+      "name": "Greybox: run (single case)",
       "type": "debugpy",
       "request": "launch",
-      "module": "edfa_sim",
+      "module": "edfa_greybox",
       "args": ["run", "--case", "${input:caseId}"],
       "cwd": "${workspaceFolder}",
       "env": { "PYTHONPATH": "${workspaceFolder}/src" },
@@ -24,13 +24,79 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "EDFA: validate",
+      "name": "Greybox: validate",
       "type": "debugpy",
       "request": "launch",
-      "module": "edfa_sim",
+      "module": "edfa_greybox",
       "args": ["validate"],
       "cwd": "${workspaceFolder}",
       "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Whitebox: chain (demo config)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "edfa_whitebox",
+      "args": ["configs/whitebox_three_stage_demo.json"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": true,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Whitebox: chain (choose config, full spectra)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "edfa_whitebox",
+      "args": ["${input:whiteboxConfig}", "--full"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": true,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Whitebox: single stage (solve_stage)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/debug_whitebox_stage.py",
+      "args": ["--stage", "${input:whiteboxStage}", "--steps", "60"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": true,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Whitebox: pytest (current file)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["${file}", "-x", "-s", "-p", "no:cacheprovider"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Whitebox: pytest (selected test)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["tests/test_whitebox.py", "-x", "-s", "-k", "${input:testName}", "-p", "no:cacheprovider"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "All tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-p", "no:cacheprovider"],
+      "cwd": "${workspaceFolder}",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "justMyCode": false,
       "console": "integratedTerminal"
     }
   ],
@@ -38,7 +104,34 @@
     {
       "id": "caseId",
       "type": "promptString",
-      "description": "scenario id (see scenarios in configs/three_stage_demo.json)"
+      "description": "greybox scenario id (see scenarios in configs/three_stage_demo.json)"
+    },
+    {
+      "id": "whiteboxConfig",
+      "type": "promptString",
+      "description": "whitebox config path",
+      "default": "configs/whitebox_three_stage_demo.json"
+    },
+    {
+      "id": "whiteboxStage",
+      "type": "pickString",
+      "description": "EDF stage id in the whitebox config",
+      "options": ["stage1", "stage2", "stage3"],
+      "default": "stage1"
+    },
+    {
+      "id": "testName",
+      "type": "pickString",
+      "description": "whitebox test to debug",
+      "options": [
+        "test_unpumped_fiber_only_absorbs",
+        "test_full_inversion_limit_bounds_gain",
+        "test_high_pump_limit_matches_paper_eq31",
+        "test_fig8_small_signal_gain_trend",
+        "test_gain_compresses_with_input_power",
+        "test_ase_grid_is_resolved_and_physical",
+        "test_more_pump_gives_more_gain_and_less_pump_leftover"
+      ]
     }
   ]
 }

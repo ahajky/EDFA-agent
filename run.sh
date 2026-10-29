@@ -5,6 +5,7 @@ ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ENV_NAME="${EDFA_ENV_NAME:-edfa-agent}"
 ENV_FILE="$ROOT_DIR/environment.yml"
 DEFAULT_CONFIG="$ROOT_DIR/configs/three_stage_demo.json"
+DEFAULT_WHITEBOX_CONFIG="$ROOT_DIR/configs/whitebox_three_stage_demo.json"
 DEFAULT_OUTPUT="$ROOT_DIR/outputs/three_stage_demo"
 
 find_conda() {
@@ -40,11 +41,14 @@ Commands:
   test [pytest args...]  Run the test suite
   check                  Validate the default config and run tests
   summary [output]       Print the generated cases.csv
+  whitebox [config] [--full]
+                         Run the white-box rate-propagation model
 
 Examples:
   ./run.sh setup
   ./run.sh run
   ./run.sh case stage2_pump_health_60
+  ./run.sh whitebox
   ./run.sh test -vv
 
 Environment variables:
@@ -74,8 +78,8 @@ run_in_env() {
 
 require_project() {
   require_env
-  if ! run_in_env python -c "import edfa_sim" >/dev/null 2>&1; then
-    echo "error: edfa_sim is not installed in '$ENV_NAME'" >&2
+  if ! run_in_env python -c "import edfa_greybox" >/dev/null 2>&1; then
+    echo "error: edfa_greybox is not installed in '$ENV_NAME'" >&2
     echo "run: ./run.sh setup" >&2
     exit 1
   fi
@@ -104,16 +108,16 @@ import numpy
 import pytest
 
 try:
-    import edfa_sim
+    import edfa_greybox
 except ImportError:
-    edfa_sim_version = "not installed"
+    edfa_greybox_version = "not installed"
 else:
-    edfa_sim_version = getattr(edfa_sim, "__version__", "editable")
+    edfa_greybox_version = getattr(edfa_greybox, "__version__", "editable")
 
 print(f"python:   {platform.python_version()} ({sys.executable})")
 print(f"numpy:    {numpy.__version__}")
 print(f"pytest:   {pytest.__version__}")
-print(f"edfa_sim: {edfa_sim_version}")
+print(f"edfa_greybox: {edfa_greybox_version}")
 PY
 }
 
@@ -138,13 +142,13 @@ case "$command" in
   validate)
     require_project
     config="${1:-$DEFAULT_CONFIG}"
-    run_in_env python -m edfa_sim.cli validate --config "$config"
+    run_in_env python -m edfa_greybox.cli validate --config "$config"
     ;;
   run)
     require_project
     config="${1:-$DEFAULT_CONFIG}"
     output="${2:-$DEFAULT_OUTPUT}"
-    run_in_env python -m edfa_sim.cli run --config "$config" --output "$output"
+    run_in_env python -m edfa_greybox.cli run --config "$config" --output "$output"
     ;;
   case)
     require_project
@@ -155,7 +159,7 @@ case "$command" in
     fi
     case_id="$1"
     output="${2:-$ROOT_DIR/outputs/cases/$case_id}"
-    run_in_env python -m edfa_sim.cli run \
+    run_in_env python -m edfa_greybox.cli run \
       --config "$DEFAULT_CONFIG" \
       --case "$case_id" \
       --output "$output"
@@ -181,8 +185,17 @@ PY
     ;;
   check)
     require_project
-    run_in_env python -m edfa_sim.cli validate --config "$DEFAULT_CONFIG"
+    run_in_env python -m edfa_greybox.cli validate --config "$DEFAULT_CONFIG"
     run_in_env python -m pytest
+    ;;
+  whitebox)
+    require_project
+    config="$DEFAULT_WHITEBOX_CONFIG"
+    if (($#)) && [[ "$1" != --* ]]; then
+      config="$1"
+      shift
+    fi
+    run_in_env python -m edfa_whitebox "$config" "$@"
     ;;
   summary)
     output="${1:-$DEFAULT_OUTPUT}"

@@ -3,14 +3,15 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "edfa-sim"
+name = "edfa-greybox"
 version = "0.1.0"
 description = "Explainable grey-box EDFA chain simulation for fault case generation"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.24"]
 
 [project.scripts]
-edfa-sim = "edfa_sim.cli:main"
+edfa-greybox = "edfa_greybox.cli:main"
+edfa-whitebox = "edfa_whitebox.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

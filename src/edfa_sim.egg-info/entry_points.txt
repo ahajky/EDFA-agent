@@ -1,2 +1,0 @@
-[console_scripts]
-edfa-sim = edfa_sim.cli:main

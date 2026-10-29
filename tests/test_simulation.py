@@ -4,7 +4,7 @@ import copy
 
 import pytest
 
-from edfa_sim import load_config, simulate_suite
+from edfa_greybox import load_config, simulate_suite
 
 
 @pytest.fixture()

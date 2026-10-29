@@ -1,0 +1,175 @@
+{
+  "name": "whitebox_three_stage_demo",
+  "metadata": {
+    "parameter_source": "engineering_assumption",
+    "vendor_confirmed": false,
+    "notes": "Textbook-order fiber lengths and pumps. Peak cross sections at 1530 nm (sigma_a=6.72e-25, sigma_e=6.55e-25 m^2) and lifetime 10 ms follow the iXblue EDF datasheet; the spectral shape is a Gaussian fit, not measured. erbium_area_m2 is an assumption (10 um^2). Not a vendor specification. The GFF loss_spectrum_db is an invented notch (28 dB at 1530 nm) that suppresses the 1530 nm ASE peak; it is not a vendor curve. Fiber lengths (8/5/10 m) and pump powers (100/250/800 mW) were chosen by a parameter sweep so that the 8-channel demo gives about 18 dBm total output; they are not vendor values. Channels: 8 on a 100 GHz grid from 193.1 THz (1546.9-1552.5 nm, near the centre of the C band); the real plan must come from the vendor."
+  },
+  "channels": {
+    "start_thz": 193.1,
+    "spacing_ghz": 100.0,
+    "count": 8,
+    "power_dbm": -24.0,
+    "ase_grid_nm": {
+      "start_nm": 1460.0,
+      "stop_nm": 1570.0,
+      "step_nm": 1.0
+    }
+  },
+  "spectroscopy": {
+    "absorption_gaussians": [
+      [
+        2.2e-25,
+        979.0,
+        8.0
+      ],
+      [
+        6.758e-25,
+        1532.0,
+        12.0
+      ],
+      [
+        3.379e-25,
+        1549.0,
+        22.0
+      ],
+      [
+        1.559e-25,
+        1565.0,
+        30.0
+      ]
+    ],
+    "mccumber_epsilon_nm": 1528.75,
+    "temperature_k": 300.0
+  },
+  "solver": {
+    "steps": 120,
+    "max_iterations": 60,
+    "tolerance": 1e-06
+  },
+  "elements": [
+    {
+      "id": "in_loss",
+      "type": "passive",
+      "loss_db": 0.5
+    },
+    {
+      "id": "stage1",
+      "type": "edf",
+      "fiber": {
+        "length_m": 8,
+        "doping_m3": 2.5e+24,
+        "lifetime_s": 0.01,
+        "overlap_signal": 0.6,
+        "overlap_pump": 0.6,
+        "erbium_area_m2": 1e-11,
+        "background_loss_db_per_m": 0.008
+      },
+      "pumps": [
+        {
+          "power_mw": 100.0,
+          "wavelength_nm": 980.0,
+          "direction": "forward"
+        }
+      ]
+    },
+    {
+      "id": "isolator_gff1",
+      "type": "passive",
+      "loss_db": 1.0,
+      "loss_spectrum_db": {
+        "wavelengths_nm": [
+          1460.0,
+          1520.0,
+          1526.0,
+          1530.0,
+          1534.0,
+          1538.0,
+          1542.0,
+          1546.0,
+          1570.0
+        ],
+        "loss_db": [
+          0.0,
+          0.0,
+          12.0,
+          28.0,
+          16.0,
+          6.0,
+          2.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "id": "stage2",
+      "type": "edf",
+      "fiber": {
+        "length_m": 5,
+        "doping_m3": 2.5e+24,
+        "lifetime_s": 0.01,
+        "overlap_signal": 0.6,
+        "overlap_pump": 0.6,
+        "erbium_area_m2": 1e-11,
+        "background_loss_db_per_m": 0.008
+      },
+      "pumps": [
+        {
+          "power_mw": 250.0,
+          "wavelength_nm": 980.0,
+          "direction": "forward"
+        }
+      ]
+    },
+    {
+      "id": "isolator_gff2",
+      "type": "passive",
+      "loss_db": 1.0,
+      "loss_spectrum_db": {
+        "wavelengths_nm": [
+          1460.0,
+          1520.0,
+          1526.0,
+          1530.0,
+          1534.0,
+          1538.0,
+          1542.0,
+          1546.0,
+          1570.0
+        ],
+        "loss_db": [
+          0.0,
+          0.0,
+          12.0,
+          28.0,
+          16.0,
+          6.0,
+          2.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "id": "stage3",
+      "type": "edf",
+      "fiber": {
+        "length_m": 10,
+        "doping_m3": 2.5e+24,
+        "lifetime_s": 0.01,
+        "overlap_signal": 0.6,
+        "overlap_pump": 0.6,
+        "erbium_area_m2": 1e-11,
+        "background_loss_db_per_m": 0.008
+      },
+      "pumps": [
+        {
+          "power_mw": 800.0,
+          "wavelength_nm": 980.0,
+          "direction": "backward"
+        }
+      ]
+    }
+  ]
+}

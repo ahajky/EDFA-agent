@@ -37,10 +37,10 @@ conda activate edfa-agent
 原有免安装方式仍然可用：
 
 ```bash
-PYTHONPATH=src python3 -m edfa_sim.cli validate \
+PYTHONPATH=src python3 -m edfa_greybox.cli validate \
   --config configs/three_stage_demo.json
 
-PYTHONPATH=src python3 -m edfa_sim.cli run \
+PYTHONPATH=src python3 -m edfa_greybox.cli run \
   --config configs/three_stage_demo.json \
   --output outputs/three_stage_demo
 ```
@@ -49,13 +49,13 @@ PYTHONPATH=src python3 -m edfa_sim.cli run \
 
 ```bash
 python3 -m pip install -e .
-edfa-sim run --config configs/three_stage_demo.json
+edfa-greybox run --config configs/three_stage_demo.json
 ```
 
 只运行指定案例：
 
 ```bash
-PYTHONPATH=src python3 -m edfa_sim.cli run \
+PYTHONPATH=src python3 -m edfa_greybox.cli run \
   --case stage2_pump_health_60 \
   --case out_tap_bias_2db \
   --output outputs/selected_cases
@@ -115,3 +115,10 @@ diagnostic_evidence          基于方向性变化的可解释证据
 - 仿真入门：[EDFA 仿真基础介绍](.agent/reports/20261021-EDFA仿真基础介绍.md)。
 - 当前实现说明：[EDFA 灰盒仿真 MVP 说明](.agent/reports/20261023-EDFA灰盒仿真MVP说明.md)。
 - 目录说明与协作规则见 [AGENTS.md](AGENTS.md)。
+
+## 两套并行仿真方案
+
+- `src/edfa_greybox/`:灰盒链路仿真(故障注入、AGC、测量链),配置 `configs/three_stage_demo.json`,入口 `edfa-greybox`。
+- `src/edfa_whitebox/`:Giles-Desurvire 速率-传播白盒模型,配置 `configs/whitebox_three_stage_demo.json`,入口 `edfa-whitebox` 或 `python -m edfa_whitebox <config>`。
+
+两者参数均为工程假设,未经厂商确认。
